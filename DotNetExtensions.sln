@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22609.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetExtensions", "DotNetExtensions\DotNetExtensions.csproj", "{7627DDD9-65ED-49C0-A4CB-1D6B13C0A201}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetExtensions.Test", "DotNetExtensions.Test\DotNetExtensions.Test.csproj", "{196CF30B-B0DD-4D42-B762-9A563CC90D48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7627DDD9-65ED-49C0-A4CB-1D6B13C0A201}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7627DDD9-65ED-49C0-A4CB-1D6B13C0A201}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7627DDD9-65ED-49C0-A4CB-1D6B13C0A201}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7627DDD9-65ED-49C0-A4CB-1D6B13C0A201}.Release|Any CPU.Build.0 = Release|Any CPU
+		{196CF30B-B0DD-4D42-B762-9A563CC90D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{196CF30B-B0DD-4D42-B762-9A563CC90D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{196CF30B-B0DD-4D42-B762-9A563CC90D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{196CF30B-B0DD-4D42-B762-9A563CC90D48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
