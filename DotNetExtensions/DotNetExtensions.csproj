@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Decimal.cs" />
+    <Compile Include="Double.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Exception.cs" />
     <Compile Include="IEnumerable.cs" />
