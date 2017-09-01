@@ -43,5 +43,45 @@ namespace DotNetExtensions.Test
             Assert.AreEqual(1, r.Length);
             Assert.AreEqual("aaa", r[0]);
         }
+
+        [TestMethod]
+        public void Truncate_returns_null_when_passed_null()
+        {
+            string s = null;
+
+            var r = s.Truncate(10);
+
+            Assert.AreEqual(null, r);
+        }
+
+        [TestMethod]
+        public void Truncate_returns_correctly_truncated_string_and_defaults_to_ellipsis_as_omission_indicator()
+        {
+            string s = "Lorem ipsum dolor sit amet";
+
+            var r = s.Truncate(10);
+
+            Assert.AreEqual("Lorem ipsu…", r);
+        }
+
+        [TestMethod]
+        public void Truncate_returns_correctly_truncated_string_and_uses_passed_omission_indicator_char()
+        {
+            string s = "Lorem ipsum dolor sit amet";
+
+            var r = s.Truncate(10, (char)8942);
+
+            Assert.AreEqual("Lorem ipsu⋮", r);
+        }
+
+        [TestMethod]
+        public void Truncate_returns_correctly_truncated_string_and_uses_passed_omission_indicator_string()
+        {
+            string s = "Lorem ipsum dolor sit amet";
+
+            var r = s.Truncate(10, " (...)");
+
+            Assert.AreEqual("Lorem ipsu (...)", r);
+        }
     }
 }

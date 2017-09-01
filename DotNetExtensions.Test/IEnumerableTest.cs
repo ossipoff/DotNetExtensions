@@ -119,6 +119,20 @@ namespace DotNetExtensions.Test
 
             Assert.AreEqual(2, r.Count());
         }
+
+        [TestMethod]
+        public void Chunk_splits_list_of_strings()
+        {
+            var stringList = new[] { "A", "B", "C", "D" };
+
+            var r = stringList.Chunk(2);
+
+            Assert.AreEqual(2, r.Count());
+            Assert.AreEqual(2, r.First().Count());
+            Assert.AreEqual(2, r.Last().Count());
+            Assert.AreEqual("AB", string.Join("", r.First()));
+            Assert.AreEqual("CD", string.Join("", r.Last()));
+        }
     }
 
     class TestDouble

@@ -19,5 +19,15 @@ namespace DotNetExtensions
                 return new string[] { s };
             }
         }
+
+        public static string Truncate(this string value, int maxLength, char omissionIndicator = (char)8230)
+        {
+            return Truncate(value, maxLength, omissionIndicator.ToString());
+        }
+
+        public static string Truncate(this string value, int maxLength, string omissionIndicator)
+        {
+            return (value?.Length).GetValueOrDefault() <= maxLength ? value : $"{value.Substring(0, maxLength)}{omissionIndicator}";
+        }
     }
 }

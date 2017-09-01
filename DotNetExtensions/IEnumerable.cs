@@ -18,6 +18,15 @@ namespace DotNetExtensions
             return ienumerable.Distinct(distinctByComparer);
         }
 
+        public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> ienumerable, int chunkSize)
+        {
+            return ienumerable
+                .Select((x, i) => new { Index = i, Value = x })
+                .GroupBy(x => x.Index / chunkSize)
+                .Select(x => x.Select(v => v.Value).ToList())
+                .ToList();
+        }
+
         private class DistinctByComparer<T> : IEqualityComparer<T>
         {
             private readonly Func<T, object> valueFunc;
