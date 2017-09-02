@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Globalization;
 
 namespace DotNetExtensions.Test
 {
@@ -132,6 +133,56 @@ namespace DotNetExtensions.Test
             Assert.AreEqual(2, r.Last().Count());
             Assert.AreEqual("AB", string.Join("", r.First()));
             Assert.AreEqual("CD", string.Join("", r.Last()));
+        }
+
+        [TestMethod]
+        public void OrderByNatural_orders_list_of_integer_strings_correctly()
+        {
+            var stringList = new[] { "1", "10", "2", "20" };
+
+            var r = stringList.OrderByNatural(s => s);
+
+            Assert.AreEqual("1,2,10,20", string.Join(",", r));
+        }
+
+        [TestMethod]
+        public void OrderByNatural_orders_list_of_floating_point_strings_correctly()
+        {
+            var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
+            var stringList = new[] { "1.0", "1.10", "2.01", "2.10" };
+
+            var r = stringList.OrderByNatural(s => s);
+
+            Assert.AreEqual("1.0,1.10,2.01,2.10", string.Join(",", r));
+
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+        }
+
+        [TestMethod]
+        public void OrderByNatural_orders_list_of_mixed_content_strings_correctly()
+        {
+            var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
+            var stringList = new[] { "1.10 DE", "1.11 AB", "1.10 CD", "1.20 BC" };
+
+            var r = stringList.OrderByNatural(s => s);
+
+            Assert.AreEqual("1.10 CD,1.10 DE,1.11 AB,1.20 BC", string.Join(",", r));
+
+            System.Threading.Thread.CurrentThread.CurrentCulture = currentCulture;
+        }
+
+        [TestMethod]
+        public void OrderByNaturalDescending_orders_list_of_integer_strings_correctly()
+        {
+            var stringList = new[] { "1", "10", "2", "20" };
+
+            var r = stringList.OrderByNaturalDescending(s => s);
+
+            Assert.AreEqual("20,10,2,1", string.Join(",", r));
         }
     }
 
