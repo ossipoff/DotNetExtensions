@@ -146,6 +146,36 @@ namespace DotNetExtensions.Test
         }
 
         [TestMethod]
+        public void OrderByNatural_orders_list_of_signed_integer_strings_correctly()
+        {
+            var stringList = new[] { "1", "-10", "2", "-20" };
+
+            var r = stringList.OrderByNatural(s => s);
+
+            Assert.AreEqual("-20,-10,1,2", string.Join(",", r));
+        }
+
+        [TestMethod]
+        public void OrderByNatural_orders_list_of_signed_integer_mixed_strings_correctly()
+        {
+            var stringList = new[] { "10 abc -30 def", "1", "-10 abc +20 def", "2", "-10 abc -30 def" };
+
+            var r = stringList.OrderByNatural(s => s);
+
+            Assert.AreEqual("-10 abc -30 def,-10 abc +20 def,1,2,10 abc -30 def", string.Join(",", r));
+        }
+
+        [TestMethod]
+        public void OrderByNatural_orders_list_with_plusses_and_minusses_correctly()
+        {
+            var stringList = new[] { "ABC---++DEF-1", "ABC---++DEF1", "ABC---++GHI-2", "ABC---++DEF-10", "ABC---++DEF-20" };
+
+            var r = stringList.OrderByNatural(s => s);
+
+            Assert.AreEqual("ABC---++DEF-20,ABC---++DEF-10,ABC---++DEF-1,ABC---++DEF1,ABC---++GHI-2", string.Join(",", r));
+        }
+
+        [TestMethod]
         public void OrderByNatural_orders_list_of_floating_point_strings_correctly()
         {
             var currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;

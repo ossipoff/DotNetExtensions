@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -11,8 +12,14 @@ namespace DotNetExtensions
 {
     public static class IEnumerable
     {
-        private static Regex naturalOrderRegEx = new System.Text.RegularExpressions.Regex($@"(\d*\{Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator}?\d+)|([^\d]*)");
-
+        private static readonly string naturalOrderRegexString = @"([+-]?\d*{0}?\d+)|([^\d^+^-]*|[+-]*)";
+        
+        private static readonly Dictionary<string, Regex> naturalOrderRegexes = new Dictionary<string, System.Text.RegularExpressions.Regex>()
+        {
+            { ".", new Regex(string.Format(naturalOrderRegexString, "\\."), RegexOptions.Compiled) },
+            { ",", new Regex(string.Format(naturalOrderRegexString, ","), RegexOptions.Compiled) }
+        };
+        
         public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> ienumerable, Expression<Func<T, object>> property)
         {
             var valueFunc = property.Compile();
@@ -31,11 +38,23 @@ namespace DotNetExtensions
                 .ToList();
         }
 
-        public static IOrderedEnumerable<T> OrderByNatural<T>(this IEnumerable<T> ienumerable, Func<T, string> selector)
+        public static IOrderedEnumerable<T> OrderByNatural<T>(this IEnumerable<T> ienumerable, Func<T, string> selector, NumberFormatInfo numberFormat = null)
         {
+            if (numberFormat == null)
+            {
+                numberFormat = Thread.CurrentThread.CurrentCulture.NumberFormat;
+            }
+
+            var decimalSeparator = numberFormat.NumberDecimalSeparator;
+
+            if (!naturalOrderRegexes.TryGetValue(decimalSeparator, out Regex naturalOrderRegex))
+            {
+                naturalOrderRegex = naturalOrderRegexes.Values.First();
+            }
+            
             var items = ienumerable.Select(i => new { Item = i, Text = selector(i) }).Select(s => new {
                 Item = s.Item,
-                TextColumns = naturalOrderRegEx.Matches(s.Text).OfType<Match>().Select(m => m.Captures[0].Value).Where(x => !string.IsNullOrEmpty(x)).ToArray()
+                TextColumns = naturalOrderRegex.Matches(s.Text).OfType<Match>().Select(m => m.Captures[0].Value).Where(x => !string.IsNullOrEmpty(x)).ToArray()
             });
 
             var maxColumnCount = items.Max(l => l.TextColumns.Count());
@@ -47,12 +66,14 @@ namespace DotNetExtensions
                 return new { Item = s.Item, TextColumns = a };
             });
 
-            var orderedItems = items.OrderBy(x => x.TextColumns[0], new NumericStringComparer());
+            var numbericStringComparer = new NumericStringComparer(numberFormat);
+
+            var orderedItems = items.OrderBy(x => x.TextColumns[0], numbericStringComparer);
 
             for (int i = 1; i < maxColumnCount; i++)
             {
                 int columnIndex = i; //avoids out of bounds exception
-                orderedItems = orderedItems.ThenBy(x => x.TextColumns[columnIndex], new NumericStringComparer());
+                orderedItems = orderedItems.ThenBy(x => x.TextColumns[columnIndex], numbericStringComparer);
             }
 
             return orderedItems.Select(x => x.Item).OrderBy(x => 1);
@@ -65,9 +86,16 @@ namespace DotNetExtensions
 
         private class NumericStringComparer : IComparer<string>
         {
+            private readonly NumberFormatInfo numberFormat;
+
+            public NumericStringComparer(NumberFormatInfo numberFormat)
+            {
+                this.numberFormat = numberFormat;
+            }
+
             public int Compare(string x, string y)
             {
-                if (double.TryParse(x, out double xd) && double.TryParse(y, out double yd))
+                if (double.TryParse(x, NumberStyles.Number, numberFormat, out double xd) && double.TryParse(y, NumberStyles.Number, numberFormat, out double yd))
                 {
                     return xd.CompareTo(yd);
                 }
