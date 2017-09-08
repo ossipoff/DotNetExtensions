@@ -93,7 +93,7 @@ namespace DotNetExtensions
                 text = text.Replace(replacement.Key.ToString(), replacement.Value);
             }
 
-            text = text.LatinDiacriticsToAscii().Replace(" ", "-");
+            text = text.LatinDiacriticsToAscii();
 
             return slugifyRegex.Replace(text, "");
         }
