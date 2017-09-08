@@ -214,6 +214,16 @@ namespace DotNetExtensions.Test
 
             Assert.AreEqual("20,10,2,1", string.Join(",", r));
         }
+
+        [TestMethod]
+        public void OrderByNatural_handles_empty_IEnumerable_without_throwing_exception()
+        {
+            var stringList = new string[] { };
+
+            var r = stringList.OrderByNatural(s => s);
+
+            Assert.AreEqual(0, r.Count());
+        }
     }
 
     class TestDouble

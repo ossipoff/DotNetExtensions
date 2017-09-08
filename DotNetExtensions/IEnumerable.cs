@@ -40,6 +40,11 @@ namespace DotNetExtensions
 
         public static IOrderedEnumerable<T> OrderByNatural<T>(this IEnumerable<T> ienumerable, Func<T, string> selector, NumberFormatInfo numberFormat = null)
         {
+            if (ienumerable.Count() == 0)
+            {
+                return ienumerable.OrderBy(x => 1);
+            }
+
             if (numberFormat == null)
             {
                 numberFormat = Thread.CurrentThread.CurrentCulture.NumberFormat;
