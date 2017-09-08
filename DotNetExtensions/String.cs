@@ -32,7 +32,7 @@ namespace DotNetExtensions
             return (value?.Length).GetValueOrDefault() <= maxLength ? value : $"{value.Substring(0, maxLength)}{omissionIndicator}";
         }
 
-        public static Dictionary<char, string> latinDiacriticsToAsciiReplacements = new Dictionary<char, string>()
+        private static readonly Dictionary<char, string> latinDiacriticsToAsciiReplacements = new Dictionary<char, string>()
         {
             { 'ı', "i" },
             { 'ẞ', "S" },
